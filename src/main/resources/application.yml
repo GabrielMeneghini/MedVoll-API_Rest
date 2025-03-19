@@ -1,8 +1,19 @@
 spring:
   application:
     name: api
+  data:
+      web:
+        pageable:
+          page-parameter: pagina
+          size-parameter: tamanho
+        sort:
+          sort-parameter: ordem
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/${DB_NAME_VOLLMED}
     username: ${DB_USER_MySQL}
     password: ${DB_PASSWORD}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
