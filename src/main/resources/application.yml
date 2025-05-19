@@ -24,3 +24,4 @@ api:
   security:
     token:
       secret: ${JWT_SECRET_VOLLMED:12345678}
+      issuer: ${JWT_ISSUER_VOLLMED:API Voll.med}
