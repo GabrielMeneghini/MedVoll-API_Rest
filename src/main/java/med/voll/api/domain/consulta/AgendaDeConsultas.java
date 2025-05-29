@@ -1,14 +1,15 @@
 package med.voll.api.domain.consulta;
 
 import med.voll.api.domain.ValidacaoException;
+import med.voll.api.domain.consulta.validacoes.agendamento.ValidadorAgendamentoConsulta;
+import med.voll.api.domain.consulta.validacoes.cancelamento.ValidadorCancelamentoConsulta;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.medico.MedicoRepository;
 import med.voll.api.domain.paciente.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AgendaDeConsultas {
@@ -22,6 +23,13 @@ public class AgendaDeConsultas {
     @Autowired
     private MedicoRepository medicoRepository;
 
+    @Autowired
+    private List<ValidadorAgendamentoConsulta> validadoresAgendamentoConsultas;
+
+    @Autowired
+    private List<ValidadorCancelamentoConsulta> validadoresCancelamentoConsultas;
+
+    // Methods
     public Consulta agendar(DadosAgendamentoConsulta dados) {
 
         // Tratando id do paciente
@@ -37,9 +45,16 @@ public class AgendaDeConsultas {
         Medico medico;
         if(dados.idMedico() == null) {
             medico = escolherMedicoDisponivelAleatoriamente(dados);
+            if(medico == null) {
+                throw new ValidacaoException("Não há nenhum médico disponível para essa data e hora.");
+            }
         } else {
             medico = medicoRepository.getReferenceById(dados.idMedico());
         }
+
+        System.out.println(medico);
+        // Validações
+        validadoresAgendamentoConsultas.forEach(v -> v.validar(dados));
 
         // Criando e salvando Consulta no DB
         var consulta = new Consulta(null, paciente.get(), medico, dados.dataHora(), null);
@@ -49,18 +64,14 @@ public class AgendaDeConsultas {
 
     public void cancelar(DadosCancelamentoConsulta dados) {
 
-        LocalDateTime dataHoraRequisicao = LocalDateTime.now();
-
         // Verificando se id da consulta existe
         if(!consultaRepository.existsById(dados.idConsulta())) {
             throw new ValidacaoException("Id da consulta informada não existe!");
         }
         Consulta consulta = consultaRepository.getReferenceById(dados.idConsulta());
 
-        // Verificando se a consulta está sendo cancelada com pelo menos 24 horas de antecedência
-        if(Duration.between(dataHoraRequisicao, consulta.getDataHora()).toHours() < 24) {
-            throw new ValidacaoException("A consulta só pode ser cancelada com no mínimo 24 horas de antecedência.");
-        }
+        // Validações
+        validadoresCancelamentoConsultas.forEach(v -> v.validar(dados));
 
         consulta.cancelar(dados.motivo());
     }

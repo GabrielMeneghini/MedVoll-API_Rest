@@ -53,4 +53,17 @@ public class Medico {
     public void excluir() {
         this.ativo = false;
     }
+
+    @Override
+    public String toString() {
+        return "Medico{" +
+                "especialidade=" + especialidade +
+                ", crm='" + crm + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", email='" + email + '\'' +
+                ", nome='" + nome + '\'' +
+                ", ativo=" + ativo +
+                ", id=" + id +
+                '}';
+    }
 }

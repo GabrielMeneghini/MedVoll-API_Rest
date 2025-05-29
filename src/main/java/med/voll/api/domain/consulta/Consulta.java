@@ -1,7 +1,6 @@
 package med.voll.api.domain.consulta;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +35,7 @@ public class Consulta {
     @Enumerated(EnumType.STRING)
     private MotivoCancelamento motivoCancelamento;
 
+    // Methods
     public void cancelar(MotivoCancelamento motivo) {
         this.motivoCancelamento = motivo;
     }
