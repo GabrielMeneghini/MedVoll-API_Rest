@@ -18,9 +18,6 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-//    @Value("api.security.token.issuer")
-//    private String ISSUER;
-
     private static final String ISSUER = "API Voll.med";
 
     public String gerarToken(Usuario usuario) {
