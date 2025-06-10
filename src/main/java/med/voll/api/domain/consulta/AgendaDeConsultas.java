@@ -29,8 +29,9 @@ public class AgendaDeConsultas {
     @Autowired
     private List<ValidadorCancelamentoConsulta> validadoresCancelamentoConsultas;
 
+
     // Methods
-    public Consulta agendar(DadosAgendamentoConsulta dados) {
+    public DadosDetalhamentoConsulta agendar(DadosAgendamentoConsulta dados) {
 
         // Tratando id do paciente
         var paciente = pacienteRepository.findById(dados.idPaciente());
@@ -52,14 +53,13 @@ public class AgendaDeConsultas {
             medico = medicoRepository.getReferenceById(dados.idMedico());
         }
 
-        System.out.println(medico);
         // Validações
         validadoresAgendamentoConsultas.forEach(v -> v.validar(dados));
 
         // Criando e salvando Consulta no DB
         var consulta = new Consulta(null, paciente.get(), medico, dados.dataHora(), null);
         consultaRepository.save(consulta);
-        return consulta;
+        return new DadosDetalhamentoConsulta(consulta);
     }
 
     public void cancelar(DadosCancelamentoConsulta dados) {

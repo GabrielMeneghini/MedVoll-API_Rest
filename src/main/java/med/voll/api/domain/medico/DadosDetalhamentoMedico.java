@@ -8,10 +8,11 @@ public record DadosDetalhamentoMedico(Long id,
                                       String crm,
                                       String telefone,
                                       Especialidade especialidade,
+                                      boolean Ativo,
                                       Endereco endereco) {
 
     public DadosDetalhamentoMedico(Medico m) {
-        this(m.getId(), m.getNome(), m.getEmail(), m.getCrm(), m.getTelefone(), m.getEspecialidade(), m.getEndereco());
+        this(m.getId(), m.getNome(), m.getEmail(), m.getCrm(), m.getTelefone(), m.getEspecialidade(), m.isAtivo(), m.getEndereco());
     }
 }
 

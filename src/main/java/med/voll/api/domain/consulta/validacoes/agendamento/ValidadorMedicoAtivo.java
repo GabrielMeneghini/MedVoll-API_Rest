@@ -13,7 +13,7 @@ public class ValidadorMedicoAtivo implements ValidadorAgendamentoConsulta {
     MedicoRepository medicoRepository;
 
     public void validar(DadosAgendamentoConsulta dados) {
-        if(medicoRepository.existsByIdAndAtivoTrue(dados.idMedico())) {
+        if(!medicoRepository.existsByIdAndAtivoTrue(dados.idMedico())) {
             throw new ValidacaoException("O médico informado está inativo.");
         }
     }
